@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chess AI · Play chess against a minimax engine</title>
+    <meta name="description" content="Play chess in the browser against a computer opponent that uses minimax search with alpha-beta pruning and piece-square evaluation." />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Shippori+Mincho:wght@700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="wrap">
+      <header class="head">
+        <h1>Chess <span>AI</span></h1>
+        <p>Play against a computer that searches ahead with <strong>minimax</strong> and <strong>alpha-beta pruning</strong>.</p>
+      </header>
+
+      <div class="layout">
+        <section class="board-wrap" aria-labelledby="board-title">
+          <h2 id="board-title" class="visually-hidden">Chess board</h2>
+          <div class="player player--top"><span class="who" id="top-name">Computer</span><span class="captured" id="top-cap" aria-label="Pieces captured by the top player"></span></div>
+          <div class="board" id="board" role="grid" aria-label="Chess board"></div>
+          <div class="player player--bottom"><span class="who" id="bottom-name">You</span><span class="captured" id="bottom-cap" aria-label="Pieces captured by you"></span></div>
+        </section>
+
+        <aside class="side">
+          <div class="card status-card">
+            <p class="status" id="status" role="status">Your move (White).</p>
+            <div class="thinking" id="thinking" hidden><span></span><span></span><span></span> Computer is thinking…</div>
+          </div>
+          <div class="card">
+            <h2>Game</h2>
+            <div class="field">
+              <label for="level">Computer level</label>
+              <select id="level">
+                <option value="1">Beginner (looks 1 move ahead)</option>
+                <option value="2" selected>Casual (2 moves ahead)</option>
+                <option value="3">Challenging (3 moves ahead)</option>
+                <option value="4">Strong (4 moves ahead, slower)</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="side">Play as</label>
+              <select id="side">
+                <option value="w">White (move first)</option>
+                <option value="b">Black</option>
+              </select>
+            </div>
+            <div class="btns">
+              <button type="button" class="btn btn--primary" id="new">New game</button>
+              <button type="button" class="btn" id="undo">Undo</button>
+              <button type="button" class="btn" id="hint">Hint</button>
+            </div>
+          </div>
+          <div class="card">
+            <h2>AI insight</h2>
+            <dl class="insight">
+              <div><dt>Positions searched</dt><dd id="nodes">0</dd></div>
+              <div><dt>Evaluation</dt><dd id="eval">0.0</dd></div>
+              <div><dt>Search time</dt><dd id="time">0 ms</dd></div>
+            </dl>
+            <div class="evalbar" aria-hidden="true"><span id="evalfill"></span></div>
+            <p class="small">Positive evaluation means White is better (in pawns).</p>
+          </div>
+          <div class="card">
+            <h2>Moves</h2>
+            <ol class="moves" id="moves"></ol>
+          </div>
+          <details class="card how">
+            <summary>How the AI thinks</summary>
+            <ol>
+              <li>It lists every legal move for the position.</li>
+              <li>For each move it imagines the replies, then the replies to those, down to the chosen depth (<strong>minimax</strong>).</li>
+              <li>At the end of each line it scores the position: material (pawn 1, knight 3.2, bishop 3.3, rook 5, queen 9) plus <strong>piece-square tables</strong> that reward good squares, such as knights in the centre.</li>
+              <li><strong>Alpha-beta pruning</strong> skips lines that cannot change the decision, and captures are searched first so pruning works better.</li>
+              <li>It plays the move with the best guaranteed score.</li>
+            </ol>
+            <p class="small">Rules included: castling, en passant, promotion (to a queen), check, checkmate and stalemate.</p>
+          </details>
+        </aside>
+      </div>
+      <footer class="foot">AI-assisted build for the portfolio of Dustin Clarence Costo.</footer>
+    </main>
+    <script type="module" src="script.js"></script>
+  </body>
+</html>
