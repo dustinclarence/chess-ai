@@ -446,4 +446,4 @@ $('hint').addEventListener('click', () => {
 start();
 
 // Expose for automated tests.
-window.__chess = { newGame, legalMoves, makeMove, bestMove, inCheck };
+window.__chess = { newGame, legalMoves, makeMove, bestMove, inCheck, state: () => ({ game, human, thinking, animating }) };
