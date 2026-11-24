@@ -4,8 +4,6 @@ Play chess against a computer opponent. The engine searches ahead with negamax (
 
 **Live demo:** https://dustinclarence.github.io/chess-ai/
 
-> **AI-assisted build.** This project was built with the help of an AI coding assistant (Claude) as a learning project for my portfolio.
-
 ## Features
 
 - Full legal rules: castling, en passant, promotion (to queen), check, checkmate, stalemate, 50-move rule
@@ -20,7 +18,7 @@ Minimax / negamax, alpha-beta pruning, move ordering, evaluation functions
 
 ## Built with
 
-HTML, CSS and vanilla JavaScript. No frameworks, no build step and no external AI service. Everything runs in the browser.
+HTML, CSS and vanilla JavaScript. No frameworks, no build step and no external AI service. Everything runs in the browser. Built with the help of AI coding tools.
 
 ## Run locally
 
