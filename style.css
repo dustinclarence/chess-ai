@@ -29,7 +29,8 @@ h1, h2, p { margin: 0; }
 .board-wrap { width: min(100%, 620px); justify-self: center; }
 .board {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  grid-template-rows: repeat(8, minmax(0, 1fr));
   aspect-ratio: 1;
   border-radius: 10px;
   overflow: hidden;

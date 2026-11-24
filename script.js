@@ -280,7 +280,6 @@ function render() {
       const t = targets.find((m) => m.to === i);
       if (t) btn.classList.add('target', ...(t.cap !== '.' ? ['capture'] : []));
       btn.setAttribute('aria-label', `${sqName(i)}${p !== '.' ? ', ' + (isWhite(p) ? 'white ' : 'black ') + NAME[p.toLowerCase()] : ''}${t ? ', legal move' : ''}`);
-      btn.setAttribute('role', 'gridcell');
       if (p !== '.') {
         const span = document.createElement('span');
         span.className = 'piece ' + (isWhite(p) ? 'w' : 'b');
@@ -328,7 +327,38 @@ function renderSide() {
   $('top-cap').textContent = lost(human === 'w');
 }
 
-function play(m) {
+const sqBtn = (i) => boardEl.querySelector(`[data-i="${i}"]`);
+let animating = false;
+
+/* Slide the moving piece (and the rook when castling) from its start square to its new square. */
+function animateMove(m) {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return Promise.resolve();
+  const slides = [[m.from, m.to]];
+  if (m.castle) {
+    const row = m.from - (m.from % 8);
+    slides.push(m.castle === 'K' ? [row + 7, row + 5] : [row, row + 3]);
+  }
+  boardEl.querySelectorAll('.target, .sel').forEach((el) => el.classList.remove('target', 'capture', 'sel'));
+  const runs = slides.map(([a, b]) => {
+    const fromBtn = sqBtn(a), toBtn = sqBtn(b);
+    const piece = fromBtn?.querySelector('.piece');
+    if (!piece || !toBtn) return Promise.resolve();
+    const f = fromBtn.getBoundingClientRect(), t = toBtn.getBoundingClientRect();
+    fromBtn.style.zIndex = 5;
+    const victim = toBtn.querySelector('.piece');
+    victim?.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 220, delay: 120, fill: 'forwards' });
+    return piece.animate(
+      [{ transform: 'translate(0, 0)' }, { transform: `translate(${t.left - f.left}px, ${t.top - f.top}px)` }],
+      { duration: 260, easing: 'cubic-bezier(.35,0,.25,1)', fill: 'forwards' },
+    ).finished.catch(() => {});
+  });
+  return Promise.all(runs);
+}
+
+async function play(m) {
+  animating = true;
+  await animateMove(m);
+  animating = false;
   const before = game;
   game = makeMove(game, m);
   history.push({ state: before, last });
@@ -369,12 +399,11 @@ function showInsight(res, whiteEval) {
 
 boardEl.addEventListener('click', (e) => {
   const btn = e.target.closest('.sq');
-  if (!btn || thinking || game.turn !== human || gameOver()) return;
+  if (!btn || thinking || animating || game.turn !== human || gameOver()) return;
   const i = +btn.dataset.i;
   const move = targets.find((m) => m.to === i);
   if (move) {
-    play(move);
-    setTimeout(aiMove, 120);
+    play(move).then(() => setTimeout(aiMove, 120));
     return;
   }
   if (colorOf(game.b[i]) === human) {
@@ -391,7 +420,7 @@ boardEl.addEventListener('click', (e) => {
 $('new').addEventListener('click', start);
 $('side').addEventListener('change', start);
 $('undo').addEventListener('click', () => {
-  if (thinking) return;
+  if (thinking || animating) return;
   // take back the computer's reply and your move
   let steps = game.turn === human ? 2 : 1;
   while (steps-- > 0 && history.length) {

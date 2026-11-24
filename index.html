@@ -21,9 +21,9 @@
       <div class="layout">
         <section class="board-wrap" aria-labelledby="board-title">
           <h2 id="board-title" class="visually-hidden">Chess board</h2>
-          <div class="player player--top"><span class="who" id="top-name">Computer</span><span class="captured" id="top-cap" aria-label="Pieces captured by the top player"></span></div>
-          <div class="board" id="board" role="grid" aria-label="Chess board"></div>
-          <div class="player player--bottom"><span class="who" id="bottom-name">You</span><span class="captured" id="bottom-cap" aria-label="Pieces captured by you"></span></div>
+          <div class="player player--top"><span class="who" id="top-name">Computer</span><span class="visually-hidden">Pieces captured by the computer:</span><span class="captured" id="top-cap"></span></div>
+          <div class="board" id="board" role="group" aria-label="Chess board"></div>
+          <div class="player player--bottom"><span class="who" id="bottom-name">You</span><span class="visually-hidden">Pieces captured by you:</span><span class="captured" id="bottom-cap"></span></div>
         </section>
 
         <aside class="side">

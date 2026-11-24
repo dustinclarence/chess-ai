@@ -9,6 +9,7 @@ Play chess against a computer opponent. The engine searches ahead with negamax (
 - Full legal rules: castling, en passant, promotion (to queen), check, checkmate, stalemate, 50-move rule
 - Four difficulty levels (search depth 1 to 4)
 - Undo, hint, play as White or Black
+- Every move slides smoothly from its start square, and the last move stays highlighted
 - AI insight panel: positions searched, evaluation, search time
 - Move generator checked with standard perft counts
 
